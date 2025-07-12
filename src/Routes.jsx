@@ -2,7 +2,9 @@ import React from "react";
 import { BrowserRouter, Routes as RouterRoutes, Route } from "react-router-dom";
 import ScrollToTop from "components/ScrollToTop";
 import ErrorBoundary from "components/ErrorBoundary";
-// Add your imports here
+import { CartProvider } from "contexts/CartContext"; // Add this import
+
+// Page imports
 import Homepage from "pages/homepage";
 import ProductDetail from "pages/product-detail";
 import ShoppingCart from "pages/shopping-cart";
@@ -15,18 +17,20 @@ const Routes = () => {
   return (
     <BrowserRouter>
       <ErrorBoundary>
-      <ScrollToTop />
-      <RouterRoutes>
-        {/* Define your routes here */}
-        <Route path="/" element={<Homepage />} />
-        <Route path="/homepage" element={<Homepage />} />
-        <Route path="/product-detail" element={<ProductDetail />} />
-        <Route path="/shopping-cart" element={<ShoppingCart />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/product-catalog" element={<ProductCatalog />} />
-        <Route path="*" element={<NotFound />} />
-      </RouterRoutes>
+        <CartProvider> {/* Wrap everything with CartProvider */}
+          <ScrollToTop />
+          <RouterRoutes>
+            {/* Define your routes here */}
+            <Route path="/" element={<Homepage />} />
+            <Route path="/homepage" element={<Homepage />} />
+            <Route path="/product-detail" element={<ProductDetail />} />
+            <Route path="/shopping-cart" element={<ShoppingCart />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/product-catalog" element={<ProductCatalog />} />
+            <Route path="*" element={<NotFound />} />
+          </RouterRoutes>
+        </CartProvider>
       </ErrorBoundary>
     </BrowserRouter>
   );

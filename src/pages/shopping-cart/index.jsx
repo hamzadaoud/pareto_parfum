@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+// src/pages/ShoppingCart.js
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import { useCart } from '../../contexts/CartContext';
 import Header from '../../components/ui/Header';
-import Breadcrumbs from '../../components/ui/Breadcrumbs';
+import Breadcrumbs from "@components/ui/Breadcrumbs";
 import Icon from '../../components/AppIcon';
-import Button from '../../components/ui/Button';
+import Button from "@components/ui/Button";  // Fixed import
 import CartItem from './components/CartItem';
 import OrderSummary from './components/OrderSummary';
 import EmptyCart from './components/EmptyCart';
@@ -12,66 +14,9 @@ import CartSummaryMobile from './components/CartSummaryMobile';
 
 const ShoppingCart = () => {
   const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Mock cart data
-  const mockCartItems = [
-    {
-      id: 1,
-      name: "Midnight Elegance",
-      description: "A sophisticated blend of dark berries, vanilla, and sandalwood that captures the essence of luxury",
-      price: 185,
-      quantity: 2,
-      image: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&h=500&fit=crop",
-      scentNotes: ["Dark Berries", "Vanilla", "Sandalwood", "Amber"]
-    },
-    {
-      id: 2,
-      name: "Garden Whisper",
-      description: "Fresh floral bouquet with hints of jasmine, rose petals, and morning dew",
-      price: 165,
-      quantity: 1,
-      image: "https://images.pexels.com/photos/1961795/pexels-photo-1961795.jpeg?w=400&h=500&fit=crop",
-      scentNotes: ["Jasmine", "Rose Petals", "Morning Dew", "White Musk"]
-    },
-    {
-      id: 3,
-      name: "Ocean Breeze",
-      description: "Refreshing aquatic fragrance with sea salt, citrus, and marine accords",
-      price: 155,
-      quantity: 1,
-      image: "https://images.pixabay.com/photo/2020/05/11/06/20/perfume-5156966_1280.jpg?w=400&h=500&fit=crop",
-      scentNotes: ["Sea Salt", "Bergamot", "Marine Accord", "Driftwood"]
-    }
-  ];
-
-  useEffect(() => {
-    // Simulate loading cart data
-    const loadCartData = async () => {
-      setIsLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 800));
-      setCartItems(mockCartItems);
-      setIsLoading(false);
-    };
-
-    loadCartData();
-  }, []);
-
-  const handleUpdateQuantity = (itemId, newQuantity) => {
-    setCartItems(prevItems =>
-      prevItems.map(item =>
-        item.id === itemId ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
-
-  const handleRemoveItem = (itemId) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== itemId));
-  };
+  const { cartItems, updateQuantity, removeFromCart, cartCount } = useCart();
 
   const handleWhatsAppCheckout = () => {
-    // Analytics or tracking can be added here
     console.log('WhatsApp checkout initiated');
   };
 
@@ -84,70 +29,19 @@ const ShoppingCart = () => {
     { label: 'Shopping Cart', path: '/shopping-cart' }
   ];
 
-  if (isLoading) {
-    return (
-      <>
-        <Helmet>
-          <title>Shopping Cart - PARETO PARFUM</title>
-          <meta name="description" content="Review your luxury perfume selections and proceed to checkout via WhatsApp" />
-        </Helmet>
-        
-        <div className="min-h-screen bg-background">
-          <Header />
-          
-          <main className="container mx-auto px-4 lg:px-8 py-8">
-            <div className="animate-pulse">
-              <div className="h-8 bg-muted rounded w-64 mb-6"></div>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 space-y-6">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="bg-card border border-border rounded-lg p-6">
-                      <div className="flex gap-4">
-                        <div className="w-32 h-40 bg-muted rounded-lg"></div>
-                        <div className="flex-1 space-y-3">
-                          <div className="h-6 bg-muted rounded w-3/4"></div>
-                          <div className="h-4 bg-muted rounded w-full"></div>
-                          <div className="h-4 bg-muted rounded w-2/3"></div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="lg:col-span-1">
-                  <div className="bg-card border border-border rounded-lg p-6">
-                    <div className="h-6 bg-muted rounded w-32 mb-6"></div>
-                    <div className="space-y-4">
-                      <div className="h-4 bg-muted rounded"></div>
-                      <div className="h-4 bg-muted rounded"></div>
-                      <div className="h-4 bg-muted rounded"></div>
-                      <div className="h-12 bg-muted rounded mt-6"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </main>
-        </div>
-      </>
-    );
-  }
-
   return (
     <>
       <Helmet>
-        <title>Shopping Cart ({cartItems.length}) - PARETO PARFUM</title>
+        <title>{`Shopping Cart (${cartCount}) - PARETO PARFUM`}</title>
         <meta name="description" content="Review your luxury perfume selections and proceed to checkout via WhatsApp" />
-        <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
       <div className="min-h-screen bg-background">
         <Header />
         
         <main className="container mx-auto px-4 lg:px-8 py-8 pb-32 md:pb-8">
-          {/* Breadcrumbs */}
           <Breadcrumbs customItems={breadcrumbItems} />
 
-          {/* Page Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
             <div>
               <h1 className="font-playfair font-bold text-3xl md:text-4xl text-foreground mb-2">
@@ -155,7 +49,7 @@ const ShoppingCart = () => {
               </h1>
               {cartItems.length > 0 && (
                 <p className="text-muted-foreground">
-                  {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'} in your cart
+                  {cartCount} {cartCount === 1 ? 'item' : 'items'} in your cart
                 </p>
               )}
             </div>
@@ -187,25 +81,22 @@ const ShoppingCart = () => {
             )}
           </div>
 
-          {/* Cart Content */}
           {cartItems.length === 0 ? (
             <EmptyCart />
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Cart Items */}
               <div className="lg:col-span-2">
                 <div className="space-y-6">
                   {cartItems.map((item) => (
                     <CartItem
                       key={item.id}
                       item={item}
-                      onUpdateQuantity={handleUpdateQuantity}
-                      onRemove={handleRemoveItem}
+                      onUpdateQuantity={updateQuantity}
+                      onRemove={removeFromCart}
                     />
                   ))}
                 </div>
 
-                {/* Additional Actions (Mobile) */}
                 <div className="mt-8 md:hidden">
                   <div className="flex flex-col gap-3">
                     <Button
@@ -235,7 +126,6 @@ const ShoppingCart = () => {
                 </div>
               </div>
 
-              {/* Order Summary (Desktop) */}
               <div className="lg:col-span-1 hidden lg:block">
                 <OrderSummary
                   cartItems={cartItems}
@@ -246,7 +136,6 @@ const ShoppingCart = () => {
             </div>
           )}
 
-          {/* Trust Signals */}
           {cartItems.length > 0 && (
             <div className="mt-12 pt-8 border-t border-border">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">

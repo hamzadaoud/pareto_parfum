@@ -1,7 +1,8 @@
+// src/pages/components/CartItem.js
 import React, { useState } from 'react';
-import Image from '../../../components/AppImage';
-import Icon from '../../../components/AppIcon';
-import Button from '../../../components/ui/Button';
+import Image from '@components/AppImage';
+import Icon from '@components/AppIcon';
+import Button from '@components/ui/Button';
 
 const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
@@ -10,7 +11,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
   const handleQuantityChange = async (newQuantity) => {
     if (newQuantity < 1) return;
     setIsUpdating(true);
-    await new Promise(resolve => setTimeout(resolve, 300)); // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 300));
     onUpdateQuantity(item.id, newQuantity);
     setIsUpdating(false);
   };
@@ -28,7 +29,6 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
   return (
     <div className="bg-card border border-border rounded-lg p-4 md:p-6 luxury-shadow hover:luxury-shadow-lg transition-all duration-300">
       <div className="flex flex-col sm:flex-row gap-4">
-        {/* Product Image */}
         <div className="flex-shrink-0">
           <div className="w-full sm:w-24 md:w-32 h-32 md:h-40 rounded-lg overflow-hidden bg-muted">
             <Image
@@ -39,7 +39,6 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
           </div>
         </div>
 
-        {/* Product Details */}
         <div className="flex-1 min-w-0">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
             <div className="flex-1">
@@ -61,7 +60,6 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
               </div>
             </div>
             
-            {/* Price */}
             <div className="text-right">
               <p className="text-lg font-playfair font-semibold text-foreground">
                 ${item.price.toFixed(2)}
@@ -72,9 +70,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
             </div>
           </div>
 
-          {/* Quantity Controls and Actions */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            {/* Quantity Selector */}
             <div className="flex items-center gap-2">
               <span className="text-sm font-inter text-muted-foreground">Qty:</span>
               <div className="flex items-center border border-border rounded-lg bg-background">
@@ -108,9 +104,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
               </div>
             </div>
 
-            {/* Actions */}
             <div className="flex items-center gap-2">
-              {/* Subtotal */}
               <div className="text-right mr-4">
                 <p className="text-sm text-muted-foreground">Subtotal</p>
                 <p className="font-playfair font-semibold text-foreground">
@@ -118,7 +112,6 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
                 </p>
               </div>
 
-              {/* Remove Button */}
               <Button
                 variant={showRemoveConfirm ? "destructive" : "ghost"}
                 size="sm"

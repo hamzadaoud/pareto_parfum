@@ -1,9 +1,14 @@
+// src/components/sections/FeaturedCollections.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Button from '../../../components/ui/Button';
-import Image from '../../../components/AppImage';
+import Button from '../../../components/ui/Button';  // Updated path
+import Image from '../../../components/AppImage';   // Updated path
+import { useCart } from '../../../contexts/CartContext'; // check this path carefully!
+
 
 const FeaturedCollections = () => {
+  const { addToCart } = useCart();
+
   const featuredPerfumes = [
     {
       id: 1,
@@ -48,13 +53,14 @@ const FeaturedCollections = () => {
     console.log(`Added ${perfume.name} to cart`);
   };
 
-  const handleWhatsAppOrder = (perfume) => {
+   const handleWhatsAppOrder = (perfume) => {
     const message = encodeURIComponent(`Hello! I would like to order ${perfume.name} (${perfume.price}). Please provide more details about availability and delivery.`);
     window.open(`https://wa.me/1234567890?text=${message}`, '_blank');
   };
 
   return (
     <section className="py-16 lg:py-24 bg-background">
+      
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -136,15 +142,15 @@ const FeaturedCollections = () => {
                 {/* Action Buttons */}
                 <div className="space-y-3">
                   <Button
-                    variant="default"
-                    fullWidth
-                    onClick={() => handleAddToCart(perfume)}
-                    iconName="ShoppingBag"
-                    iconPosition="left"
-                    className="bg-primary hover:bg-primary/90"
-                  >
-                    Add to Cart
-                  </Button>
+        variant="default"
+        fullWidth
+        onClick={() => addToCart(perfume)}
+        iconName="ShoppingBag"
+        iconPosition="left"
+        className="bg-primary hover:bg-primary/90"
+      >
+        Add to Cart
+      </Button>
                   
                   <Button
                     variant="outline"

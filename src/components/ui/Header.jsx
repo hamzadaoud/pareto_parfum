@@ -1,14 +1,15 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Icon from '../AppIcon';
 import Button from './Button';
-
-const CartContext = React.createContext();
+import { useCart } from '../../contexts/CartContext'; // ✅ use the context to get real cart data
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const cartItemCount = 3; // Mock cart count
+
+  const { cartItems } = useCart(); // ✅ Get cart items from context
+  const cartItemCount = cartItems.length; // ✅ Count total items
 
   const navigationItems = [
     { label: 'Home', path: '/homepage', icon: 'Home' },
@@ -54,8 +55,7 @@ const Header = () => {
                   key={item.path}
                   to={item.path}
                   className={`text-sm font-inter font-medium transition-colors duration-200 hover:text-accent ${
-                    isActivePath(item.path) 
-                      ? 'text-accent border-b-2 border-accent pb-1' :'text-foreground'
+                    isActivePath(item.path) ? 'text-accent border-b-2 border-accent pb-1' : 'text-foreground'
                   }`}
                 >
                   {item.label}
@@ -75,7 +75,7 @@ const Header = () => {
               >
                 WhatsApp
               </Button>
-              
+
               <Link to="/shopping-cart" className="relative">
                 <Button
                   variant={isActivePath('/shopping-cart') ? 'default' : 'ghost'}
@@ -95,11 +95,7 @@ const Header = () => {
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center space-x-2">
               <Link to="/shopping-cart" className="relative">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="relative"
-                >
+                <Button variant="ghost" size="icon" className="relative">
                   <Icon name="ShoppingBag" size={20} />
                   {cartItemCount > 0 && (
                     <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-accent text-accent-foreground text-xs font-mono font-medium flex items-center justify-center">
@@ -108,14 +104,14 @@ const Header = () => {
                   )}
                 </Button>
               </Link>
-              
+
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={toggleMobileMenu}
                 className="text-foreground"
               >
-                <Icon name={isMobileMenuOpen ? "X" : "Menu"} size={24} />
+                <Icon name={isMobileMenuOpen ? 'X' : 'Menu'} size={24} />
               </Button>
             </div>
           </div>
@@ -131,11 +127,7 @@ const Header = () => {
               {/* Mobile Menu Header */}
               <div className="flex items-center justify-between p-6 border-b border-border">
                 <span className="text-lg font-playfair font-bold text-primary">Menu</span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={toggleMobileMenu}
-                >
+                <Button variant="ghost" size="icon" onClick={toggleMobileMenu}>
                   <Icon name="X" size={24} />
                 </Button>
               </div>
