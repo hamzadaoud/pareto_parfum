@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
-import { useCart } from '@/contexts/CartContext'; // ✅ import your cart context
-
+import { useCart } from '../../../contexts/CartContext';
 const OrderSection = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState('50ml'); // Default size
